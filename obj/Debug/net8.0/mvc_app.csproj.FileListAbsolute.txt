@@ -225,3 +225,4 @@ C:\Users\pavle\Desktop\mvc_app\obj\Debug\net8.0\refint\mvc_app.dll
 C:\Users\pavle\Desktop\mvc_app\obj\Debug\net8.0\mvc_app.pdb
 C:\Users\pavle\Desktop\mvc_app\obj\Debug\net8.0\mvc_app.genruntimeconfig.cache
 C:\Users\pavle\Desktop\mvc_app\obj\Debug\net8.0\ref\mvc_app.dll
+C:\Users\pavle\Desktop\mvc_app\obj\Debug\net8.0\mvc_app.sourcelink.json

@@ -21,9 +21,9 @@ namespace mvc_app.Controllers
             return View(item);
         }
 
-        public IActionResult Edit(int id)
+        public IActionResult Edit(int itemId)
         {
-            return View("Edit", $"Edit item with ID: {id}");
+            return Content($"Edit item with ID: {itemId}");
         }
     }
 }
