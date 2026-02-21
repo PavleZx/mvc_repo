@@ -1,8 +1,29 @@
-@model mvc_app.Models.Item
-@*
-initial comments
+@{
+    var message = "Hello, World!";
+    var items = new List<string> { "Item 1", "Item 2", "Item 3" };
+}
 
-*@
+<ul>
+    <p>@message</p>
+    @foreach (var item in items){
+        <li>@item</li>
+    }
 
 
-<p>This is the name of the item: @Model.Name</>
+</ul>
+
+@* If we need t oadd a counter *@
+
+
+<ul>
+    @for (int i = 0; i < items.Count; i++){
+        <li>@(i + 1). <strong>@items[i]</strong></li>
+
+
+    }
+</ul>
+
+@* asp-controller se daje jer index od home page-a u drugom folderu i u drugom controller-u
+    --> drugi controller je odgovoran za index page (na home page-u)*@
+
+<a asp-controller="Home" asp-action="Index" class="btn btn-danger delete">Back to home page</a>

@@ -26,6 +26,7 @@ namespace mvc_app.Controllers
 
         // ako se koristi bilo koji drugi naziv, onda se moze passati kao url parametar (sa /items/edit/1)
         // i kao querry string (sa ?id=1) 
+        
 
         public IActionResult Edit(int itemId)
         {
