@@ -1,15 +1,24 @@
 using DocumentFormat.OpenXml.EMMA;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using mvc_app.Data;
 using mvc_app.Models;
 
 namespace mvc_app.Controllers
 {
     public class ItemsController : Controller
     {
-        public IActionResult Index()
+
+        private readonly MyContext _context;
+
+        public ItemsController(MyContext context)
         {
-            return View();
-        }
+            _context = context;
+        }   
+        // public IActionResult Index()
+        // {
+        //     return View();
+        // }
 
         public IActionResult Overview()
         {
@@ -31,6 +40,13 @@ namespace mvc_app.Controllers
         public IActionResult Edit(int itemId)
         {
             return Content($"Edit item with ID: {itemId}");
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            var items = await _context.Items.ToListAsync();
+            return View(items);
+            
         }
     }
 }
