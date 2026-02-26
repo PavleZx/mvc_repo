@@ -1,5 +1,11 @@
 @model IEnumerable<mvc_app.Models.Item>
 
+
+@* Ovaj title ce bit vidljiv na tekstu tab-a u Chrome-u (ili browseru koji se koristi).*@
+
+@{
+    ViewData["Title"] = "Tasks, probni title u viewdata";
+}
 <h2>Items</h2>
 
 <table class="table">
@@ -16,7 +22,7 @@
             <tr>
                 <td>@item.Id</td>
                 <td>@item.Name</td>
-                <td>@item.Price</td>
+                <td>@item.Price.ToString("N2")</td>
             </tr>
         }
     </tbody>

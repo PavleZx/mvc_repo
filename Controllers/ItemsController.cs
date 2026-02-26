@@ -11,6 +11,9 @@ namespace mvc_app.Controllers
 
         private readonly MyContext _context;
 
+        // Moramo napraviti Controller konstruktor koji prija našu impleementaciju baze podataka, kako bi mogli koristiti bazu u svim metodama unutar kontrolera
+        // to je tako napravljeno da bismo mogli koristiti različite implementacije baze podataka, a da ne moramo mijenjati kod unutar metoda, već samo konstruktor
+        
         public ItemsController(MyContext context)
         {
             _context = context;
