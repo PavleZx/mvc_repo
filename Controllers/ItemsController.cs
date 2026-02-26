@@ -13,7 +13,7 @@ namespace mvc_app.Controllers
 
         // Moramo napraviti Controller konstruktor koji prija našu impleementaciju baze podataka, kako bi mogli koristiti bazu u svim metodama unutar kontrolera
         // to je tako napravljeno da bismo mogli koristiti različite implementacije baze podataka, a da ne moramo mijenjati kod unutar metoda, već samo konstruktor
-        
+
         public ItemsController(MyContext context)
         {
             _context = context;
@@ -40,7 +40,12 @@ namespace mvc_app.Controllers
         // i kao querry string (sa ?id=1) 
         
 
-        public IActionResult Edit(int itemId)
+
+        // ova funkcija je samo za isprobavanje asp-controller
+        // i asp-action tag helpera
+        // tu bi se stavljalo asp-controller="Items"
+        // i asp-action = "Edit_demo" u <a> element
+        public IActionResult Edit_demo(int itemId)
         {
             return Content($"Edit item with ID: {itemId}");
         }
@@ -51,5 +56,47 @@ namespace mvc_app.Controllers
             return View(items);
             
         }
+
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create([Bind("Id, Name, Price")] Item item)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Items.Add(item);
+                await _context.SaveChangesAsync();
+
+                // asfter adding the newly created item to teh context and saving changes
+                // we redirect the user to the Items/Index page
+                return RedirectToAction("Index");
+            }
+            return View(item);
+        }
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            var item = await _context.Items.FirstOrDefaultAsync(x => x.Id == id);
+            return View(item);
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit([Bind("ID, Name, Price")] Item item)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Items.Add(item);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("Index");
+            }
+            return View(item);
+
+        }
+
     }
 }

@@ -1,13 +1,12 @@
-
 @model mvc_app.Models.Item
+
 @{
-    ViewData["Title"] = "Edit Item";
+    ViewData["Title"] = "Create Item";
 }
 
-<h1>Edit Item @Model</h1>
+<h2>Create Item</h2>
 
-
-<form asp-action="Edit" method="post">
+<form asp-action="Create" method="post">
     <div class="form-group">
         <label asp-for="Name">Name</label>
         <input asp-for="Name" class="form-control" />
@@ -20,4 +19,3 @@
 
 
 </form>
-
