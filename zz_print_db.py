@@ -1,50 +1,52 @@
 import pyodbc
 
 # -----------------------------
-# REPLACE THESE PLACEHOLDERS
+# CONNECTION CONFIG
 # -----------------------------
-server = 'serverpavlemvc.database.windows.net'  # e.g., myserver.database.windows.net
-database = 'free-sql-db-0425609'                  # e.g., MyDb
-username = 'pavle'                       # e.g., adminuser
-password = 'lucyskye0405!'                       # e.g., MyPassword123
-driver = '{ODBC Driver 18 for SQL Server}'       # Make sure you have this installed
-# -----------------------------
+server   = 'serverpavlemvc.database.windows.net'
+database = 'free-sql-db-0425609'
+username = 'pavle'
+password = 'lucyskye0405!'
+driver   = '{ODBC Driver 18 for SQL Server}'
 
-# Create connection
+# -----------------------------
+# CONNECT
+# -----------------------------
 conn = pyodbc.connect(
-    f'DRIVER={driver};SERVER={server};DATABASE={database};UID={username};PWD={password};Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;'
+    f'DRIVER={driver};SERVER={server};DATABASE={database};'
+    f'UID={username};PWD={password};'
+    f'Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;'
 )
 
 cursor = conn.cursor()
 
-# Get all tables
-cursor.execute("""
-SELECT TABLE_SCHEMA, TABLE_NAME 
-FROM INFORMATION_SCHEMA.TABLES
-WHERE TABLE_TYPE = 'BASE TABLE'
-ORDER BY TABLE_SCHEMA, TABLE_NAME
-""")
-tables = cursor.fetchall()
-
-print("Tables and their columns:")
+# -----------------------------
+# PRINT ALL SerialNumbers ENTRIES
+# -----------------------------
+print("SerialNumbers table entries:")
 print("-" * 50)
 
-# Loop through each table and get columns
-for schema, table in tables:
-    print(f"Table: {schema}.{table}")
-    cursor.execute("""
-    SELECT COLUMN_NAME, DATA_TYPE, IS_NULLABLE, CHARACTER_MAXIMUM_LENGTH
-    FROM INFORMATION_SCHEMA.COLUMNS
-    WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?
-    ORDER BY ORDINAL_POSITION
-    """, (schema, table))
-    columns = cursor.fetchall()
-    for col in columns:
-        name, datatype, nullable, length = col
-        length_str = f"({length})" if length else ""
-        print(f"  {name} - {datatype}{length_str} - Nullable: {nullable}")
-    print("-" * 50)
+cursor.execute("SELECT * FROM SerialNumbers")
 
-# Close connection
+# Get column names from cursor description
+columns = [column[0] for column in cursor.description]
+print("Columns:", columns)
+print("-" * 50)
+
+rows = cursor.fetchall()
+
+if not rows:
+    print("No entries found in SerialNumbers table.")
+else:
+    for row in rows:
+        for col_name, value in zip(columns, row):
+            print(f"  {col_name}: {value}")
+        print("-" * 50)
+
+print(f"Total entries: {len(rows)}")
+
+# -----------------------------
+# CLOSE
+# -----------------------------
 cursor.close()
 conn.close()

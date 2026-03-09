@@ -1,5 +1,6 @@
 using DocumentFormat.OpenXml.EMMA;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using mvc_app.Data;
 using mvc_app.Models;
@@ -52,50 +53,86 @@ namespace mvc_app.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var items = await _context.Items.Include(s => s.SerialNumber).ToListAsync();
+            var items = await _context.Items.Include(s => s.SerialNumber)
+                                            .Include(c => c.Category)
+                                            .ToListAsync();
             return View(items);
             
         }
 
         public IActionResult Create()
         {
+            ViewData["Categories"] = new SelectList(_context.Categories, "Id", "Name");
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("Id, Name, Price")] Item item)
+        public async Task<IActionResult> Create([Bind("Id, Name, Price, CategoryId")] Item item, string SerialNumberName)
         {
             if (ModelState.IsValid)
             {
+                // If a serial number was typed in, create the entity on the fly
+                if (!string.IsNullOrEmpty(SerialNumberName))
+                {
+                    item.SerialNumber = new SerialNumber { Name = SerialNumberName };
+                }
+
                 _context.Items.Add(item);
                 await _context.SaveChangesAsync();
 
-                // asfter adding the newly created item to teh context and saving changes
-                // we redirect the user to the Items/Index page
                 return RedirectToAction("Index");
             }
+
+            ViewBag.Categories = new SelectList(_context.Categories, "Id", "Name");
             return View(item);
         }
 
         public async Task<IActionResult> Edit(int id)
         {
-            var item = await _context.Items.FirstOrDefaultAsync(x => x.Id == id);
-            return View(item);
+            var item = await _context.Items
+                .Include(i => i.SerialNumber)  // also need this to load the navigation property
+                .FirstOrDefaultAsync(x => x.Id == id);
 
+            if (item == null) return NotFound();
+
+            ViewData["Categories"] = new SelectList(_context.Categories, "Id", "Name");
+            ViewBag.SerialNumberName = item.SerialNumber?.Name;
+
+            return View(item);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit([Bind("ID, Name, Price")] Item item)
+        public async Task<IActionResult> Edit([Bind("Id, Name, Price, CategoryId")] Item item, string SerialNumberName)
         {
             if (ModelState.IsValid)
             {
-                _context.Update(item);
+                if (!string.IsNullOrEmpty(SerialNumberName))
+                {
+                    // Find the EXISTING serial number for this item
+                    var existingSerial = await _context.SerialNumbers
+                        .FirstOrDefaultAsync(s => s.ItemId == item.Id);
+
+                    if (existingSerial != null)
+                    {
+                        // Update it, don't create a new one
+                        existingSerial.Name = SerialNumberName;
+                        _context.SerialNumbers.Update(existingSerial);
+                    }
+                    else
+                    {
+                        // No serial number yet, create one
+                        item.SerialNumber = new SerialNumber { Name = SerialNumberName };
+                    }
+                }
+
+                _context.Items.Update(item);
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction("Index");
             }
-            return View(item);
 
+            ViewBag.Categories = new SelectList(_context.Categories, "Id", "Name");
+            return View(item);
         }
 
         public async Task<IActionResult> Delete(int id)

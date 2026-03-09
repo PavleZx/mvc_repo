@@ -1,4 +1,6 @@
 using System.ComponentModel.DataAnnotations;
+using DocumentFormat.OpenXml.Drawing.Diagrams;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace mvc_app.Models
 {
@@ -14,6 +16,11 @@ namespace mvc_app.Models
         public int? SerialNumberId { get; set; }
 
         public SerialNumber? SerialNumber { get; set; }
+
+        public int? CategoryId { get; set; }
+        [ForeignKey("CategoryId")]
+
+        public Category? Category { get; set; }
 
     }
 
