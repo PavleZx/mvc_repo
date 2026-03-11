@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using mvc_app.Data;
 
@@ -10,9 +11,11 @@ using mvc_app.Data;
 namespace mvc_app.Migrations
 {
     [DbContext(typeof(MyContext))]
-    partial class MyContextModelSnapshot : ModelSnapshot
+    [Migration("20260311192826_Many t omany")]
+    partial class Manytomany
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,7 +38,7 @@ namespace mvc_app.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
 
                     b.HasData(
                         new
@@ -69,7 +72,7 @@ namespace mvc_app.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Clients", (string)null);
+                    b.ToTable("Clients");
                 });
 
             modelBuilder.Entity("mvc_app.Models.Item", b =>
@@ -97,7 +100,7 @@ namespace mvc_app.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Items", (string)null);
+                    b.ToTable("Items");
 
                     b.HasData(
                         new
@@ -121,7 +124,7 @@ namespace mvc_app.Migrations
 
                     b.HasIndex("ClientId");
 
-                    b.ToTable("ItemClients", (string)null);
+                    b.ToTable("ItemClients");
                 });
 
             modelBuilder.Entity("mvc_app.Models.SerialNumber", b =>
@@ -144,7 +147,7 @@ namespace mvc_app.Migrations
                     b.HasIndex("ItemId")
                         .IsUnique();
 
-                    b.ToTable("SerialNumbers", (string)null);
+                    b.ToTable("SerialNumbers");
 
                     b.HasData(
                         new

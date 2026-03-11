@@ -55,8 +55,10 @@ namespace mvc_app.Controllers
         {
             var items = await _context.Items.Include(s => s.SerialNumber)
                                             .Include(c => c.Category)
-                                            .ToListAsync();
-            return View(items);
+                                            .Include(ic => ic.ItemClients)    // include listu itemclients sa normalnim include
+                                            .ThenInclude(c => c.Client)       // uključiti client model sa tehninclude zato sto je to model koji ce se dohvacati iza
+                                            .ToListAsync();                   // svakog dohvacanja itemclients liste
+            return View(items); 
             
         }
 

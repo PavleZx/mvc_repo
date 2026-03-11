@@ -1,6 +1,4 @@
-using System.ComponentModel.DataAnnotations;
-using DocumentFormat.OpenXml.Drawing.Diagrams;
-using System.ComponentModel.DataAnnotations.Schema;
+item model.cs:
 
 namespace mvc_app.Models
 {
@@ -28,3 +26,33 @@ namespace mvc_app.Models
 
 
 }
+
+
+itemclient.cs:
+
+namespace mvc_app.Models
+{
+
+    public class ItemClient
+    {
+        
+        public int ItemId { get; set; }
+
+        public Item Item {get; set; }
+
+        public int ClientId {get; set; }
+
+        public Client Client {get; set; }
+
+
+
+    }
+
+
+}
+
+
+
+
+
+client.cs:
